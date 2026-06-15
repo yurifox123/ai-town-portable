@@ -78,17 +78,7 @@ npm ci
 
 GitHub 仓库不会包含 `node_modules/`。如果你是下载源码 zip 或 clone 新仓库，第一次运行前必须先执行这一条；否则启动时会看到 `'tsx' 不是内部或外部命令` 这类报错。
 
-### 2. 初始化运行时配置
-
-初始化运行时目录并复制示例配置：
-
-```bash
-npm run setup
-```
-
-`setup` 会创建 `data/`、`data/saves/`、`data/chroma/`，并在缺少 `.env` 时从 `.env.example` 生成一份。
-
-### 3. 启动项目
+### 2. 启动项目
 
 ```bash
 npm start
@@ -96,6 +86,8 @@ npm start
 
 首次启动时如果还没有 `node_modules/`，`npm start` 会先自动执行 `npm ci` 安装依赖。
 如果自动安装因为网络失败中断，手动重新执行 `npm ci` 后再运行 `npm start`。
+
+`npm start` 也会自动初始化运行时目录，创建 `data/`、`data/saves/`、`data/chroma/`，并在缺少 `.env` 时从 `.env.example` 生成一份。
 
 默认端口是 `3061`。如果端口已被占用，服务器会自动尝试下一个可用端口。
 
@@ -105,9 +97,9 @@ npm start
 http://localhost:3061
 ```
 
-### 4. 配置 LLM，然后重启
+### 3. 配置 LLM，然后重启服务
 
-第一次启动后，先在网页右侧的 **LLM 配置** 面板里填写并测试配置。当前实现以 `custom` 兼容接口为主，默认模型是 Kimi K2.5。
+第一次启动后，先不要直接开始模拟。请先在网页右侧的 **LLM 配置** 面板里填写、保存并测试配置。当前实现以 `custom` 兼容接口为主，默认模型是 Kimi K2.5。
 
 常用配置项：
 
@@ -120,7 +112,7 @@ CUSTOM_RESPONSE_PATH=content[1].text
 CUSTOM_API_KEY_HEADER=x-api-key
 ```
 
-保存 LLM 配置后，先关闭服务再重新启动，让后端重新读取 `.env` 和持久化配置：
+保存并测试 LLM 配置后，关闭当前服务，再重新启动。这样后端会重新读取 `.env` 和持久化配置：
 
 ```bash
 npm run stop
@@ -128,6 +120,13 @@ npm start
 ```
 
 也可以在启动窗口按 `Ctrl+C` 关闭，然后重新执行 `npm start`。
+
+### 4. 可选：手动初始化或自检
+
+```bash
+npm run setup
+npm run doctor
+```
 
 ### 5. 常用脚本
 
@@ -279,9 +278,6 @@ ai-town/
 │     ├─ core/
 │     ├─ editor/
 │     └─ tools/
-├─ docs/
-│  ├─ survival-system-design.md
-│  └─ balance-report.md
 ├─ data/
 │  ├─ ai-town.db
 │  └─ saves/
@@ -297,9 +293,7 @@ ai-town/
 - `data/` 是运行时数据目录，包含 SQLite 数据库和快照文件。
 - `dist/` 是 TypeScript 构建产物，不参与开发时的主运行链路。
 - `package-lock.json` 必须提交，用于保证不同电脑安装到同一批依赖版本。
-- `docs/` 中已经有两份设计文档：
-  - `docs/survival-system-design.md`
-  - `docs/balance-report.md`
+- `docs/` 不包含在这个便携仓库里，避免把额外设计文档混进发布包。
 
 ## 换电脑运行
 
