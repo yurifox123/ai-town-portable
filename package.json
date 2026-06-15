@@ -12,7 +12,7 @@
     "setup": "node scripts/setup.js",
     "doctor": "node scripts/doctor.js",
     "dev": "tsx watch src/server/index.ts",
-    "prestart": "node scripts/setup.js --quiet",
+    "prestart": "node scripts/prepare-start.js",
     "start": "tsx src/server/index.ts",
     "stop": "node scripts/stop-server.js",
     "build": "tsc",

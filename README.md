@@ -99,6 +99,8 @@ npm run setup
 npm start
 ```
 
+首次启动时如果还没有 `node_modules/`，`npm start` 会先自动执行 `npm ci` 安装依赖。
+
 默认端口是 `3061`。如果端口已被占用，服务器会自动尝试下一个可用端口。
 
 启动后访问：
