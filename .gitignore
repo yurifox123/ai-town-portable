@@ -1,0 +1,45 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+*.tsbuildinfo
+
+# Environment variables
+.env
+.env.local
+
+# Data files
+data/saves/
+data/*.db
+data/*.db-shm
+data/*.db-wal
+data/chroma/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test coverage
+coverage/
+
+# Temp files
+tmp/
+temp/
+.tmp/
+
+# Ad-hoc test scripts and screenshots
+test-*.js
+*.png
+test-results/

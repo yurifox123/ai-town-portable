@@ -1,0 +1,44 @@
+{
+  "name": "ai-town",
+  "version": "0.95.0",
+  "description": "Generative Agents - AI生态小镇复刻",
+  "packageManager": "npm@11.4.1",
+  "engines": {
+    "node": ">=20 <=26",
+    "npm": ">=10"
+  },
+  "main": "src/server/index.ts",
+  "scripts": {
+    "setup": "node scripts/setup.js",
+    "doctor": "node scripts/doctor.js",
+    "dev": "tsx watch src/server/index.ts",
+    "prestart": "node scripts/setup.js --quiet",
+    "start": "tsx src/server/index.ts",
+    "stop": "node scripts/stop-server.js",
+    "build": "tsc",
+    "test": "vitest --run",
+    "lint": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@types/better-sqlite3": "^7.6.13",
+    "better-sqlite3": "^12.10.0",
+    "dotenv": "^16.4.0",
+    "playwright": "^1.60.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/uuid": "^9.0.0",
+    "@types/ws": "^8.18.1",
+    "eslint": "^8.56.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.0",
+    "vitest": "^1.2.0"
+  },
+  "keywords": [
+    "ai",
+    "agents",
+    "generative-agents",
+    "simulation"
+  ],
+  "license": "MIT"
+}

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>精灵图裁剪工具 - AI 生态小镇</title>
+  <link rel="stylesheet" href="css/sprite-crop-tool.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+<body>
+  <div id="app">
+    <!-- 顶部标题栏 -->
+    <header class="header">
+      <div class="header-left">
+        <a href="/" class="btn-back">← 返回小镇</a>
+        <h1> 精灵图裁剪工具</h1>
+      </div>
+    </header>
+
+    <!-- 主内容区 -->
+    <main class="main-content">
+      <!-- 上传区 -->
+      <section class="upload-section">
+        <div id="upload-area" class="upload-area">
+          <input type="file" id="file-input" accept="image/png,image/jpg,image/jpeg,image/webp" hidden>
+          <div class="upload-placeholder" id="upload-placeholder">
+            <span class="upload-icon">🖼️</span>
+            <span>点击或拖拽上传精灵图</span>
+            <span class="upload-hint">支持 PNG, JPG, WEBP 格式</span>
+          </div>
+          <img id="upload-preview" class="upload-preview hidden" alt="预览">
+        </div>
+      </section>
+
+      <!-- 设置面板 -->
+      <section class="settings-section hidden" id="settings-section">
+        <div class="settings-grid">
+          <div class="setting-group">
+            <label>行数</label>
+            <input type="number" id="input-rows" value="3" min="1" max="20">
+          </div>
+          <div class="setting-group">
+            <label>列数</label>
+            <input type="number" id="input-cols" value="8" min="1" max="20">
+          </div>
+          <div class="setting-group">
+            <label>帧宽 (px)</label>
+            <input type="number" id="input-frame-w" value="48" min="1" max="256">
+          </div>
+          <div class="setting-group">
+            <label>帧高 (px)</label>
+            <input type="number" id="input-frame-h" value="48" min="1" max="256">
+          </div>
+          <div class="setting-group">
+            <label>水平间距 (px)</label>
+            <input type="number" id="input-h-gap" value="0" min="0" max="50">
+          </div>
+          <div class="setting-group">
+            <label>垂直间距 (px)</label>
+            <input type="number" id="input-v-gap" value="0" min="0" max="50">
+          </div>
+          <div class="setting-group setting-full-width">
+            <label>网格对齐方式</label>
+            <div class="radio-group">
+              <label class="radio-label">
+                <input type="radio" name="align-mode" value="center" checked>
+                <span class="radio-text">居中 (图片中心)</span>
+              </label>
+              <label class="radio-label">
+                <input type="radio" name="align-mode" value="top-center">
+                <span class="radio-text">顶部居中 (Y=0, X居中)</span>
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="image-info" id="image-info"></div>
+      </section>
+
+      <!-- 主画布区域 -->
+      <section class="canvas-section hidden" id="canvas-section">
+        <div class="canvas-container">
+          <canvas id="sprite-canvas"></canvas>
+        </div>
+      </section>
+
+      <!-- 预览和分配区 -->
+      <section class="preview-section hidden" id="preview-section">
+        <div class="preview-panel">
+          <h3> 帧预览</h3>
+          <div class="preview-info" id="preview-info">点击格子查看预览</div>
+          <canvas id="preview-canvas" width="96" height="96"></canvas>
+        </div>
+
+        <div class="assignment-panel">
+          <h3>📋 帧分配</h3>
+          <p class="assignment-hint">先点击精灵图上的格子，再点击下方槽位进行分配</p>
+          <div class="assignment-slots">
+            <div class="slot-group">
+              <span class="slot-group-label">↓ 下方向</span>
+              <div class="slot-row">
+                <div class="slot" data-slot="down-walk" data-label="下-走路">
+                  <span class="slot-label">走路 (6帧)</span>
+                  <div class="slot-frames"></div>
+                </div>
+                <div class="slot" data-slot="down-idle" data-label="下-静止">
+                  <span class="slot-label">静止 (1帧)</span>
+                  <div class="slot-frames"></div>
+                </div>
+              </div>
+            </div>
+            <div class="slot-group">
+              <span class="slot-group-label">↑ 上方向</span>
+              <div class="slot-row">
+                <div class="slot" data-slot="up-walk" data-label="上-走路">
+                  <span class="slot-label">走路 (6帧)</span>
+                  <div class="slot-frames"></div>
+                </div>
+                <div class="slot" data-slot="up-idle" data-label="上-静止">
+                  <span class="slot-label">静止 (1帧)</span>
+                  <div class="slot-frames"></div>
+                </div>
+              </div>
+            </div>
+            <div class="slot-group">
+              <span class="slot-group-label">← 左方向（最后选）</span>
+              <div class="slot-row">
+                <div class="slot" data-slot="left-walk" data-label="左-走路">
+                  <span class="slot-label">走路 (6帧)</span>
+                  <div class="slot-frames"></div>
+                </div>
+                <div class="slot" data-slot="left-idle" data-label="左-静止">
+                  <span class="slot-label">静止 (1帧)</span>
+                  <div class="slot-frames"></div>
+                </div>
+              </div>
+            </div>
+            <div class="slot-group">
+              <span class="slot-group-label">→ 右方向</span>
+              <div class="slot-row">
+                <div class="slot slot-readonly" data-slot="right-walk" data-label="右-走路">
+                  <span class="slot-label">走路 (6帧) 🔀</span>
+                  <div class="slot-frames"></div>
+                </div>
+                <div class="slot slot-readonly" data-slot="right-idle" data-label="右-静止">
+                  <span class="slot-label">静止 (1帧) 🔀</span>
+                  <div class="slot-frames"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 导出区 -->
+      <section class="export-section hidden" id="export-section">
+        <h3>💾 导出</h3>
+        <div class="export-controls">
+          <div class="setting-group">
+            <label>角色名称</label>
+            <input type="text" id="input-char-name" value="xiaoming" placeholder="xiaoming">
+          </div>
+          <button id="btn-export-all" class="btn btn-primary">打包导出 ZIP</button>
+          <button id="btn-clear-assignments" class="btn btn-secondary">清空分配</button>
+        </div>
+        <div class="export-status" id="export-status"></div>
+      </section>
+    </main>
+  </div>
+
+  <script type="module" src="js/assets/sprite-crop-tool.js"></script>
+</body>
+</html>
