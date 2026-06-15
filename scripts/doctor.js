@@ -113,7 +113,10 @@ function checkPackageScripts(pkg) {
     warn("npm run stop invokes npx, which may require network access on fresh machines.");
   }
 
-  if (pkg.scripts?.prestart?.includes("scripts/setup.js")) {
+  if (
+    pkg.scripts?.prestart?.includes("scripts/setup.js") ||
+    pkg.scripts?.prestart?.includes("scripts/prepare-start.js")
+  ) {
     ok("npm start runs setup first");
   } else {
     warn("npm start does not run setup first.");
