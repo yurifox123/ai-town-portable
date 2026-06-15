@@ -78,7 +78,7 @@ npm ci
 
 GitHub 仓库不会包含 `node_modules/`。如果你是下载源码 zip 或 clone 新仓库，第一次运行前必须先执行这一条；否则启动时会看到 `'tsx' 不是内部或外部命令` 这类报错。
 
-### 2. 配置环境变量
+### 2. 初始化运行时配置
 
 初始化运行时目录并复制示例配置：
 
@@ -87,13 +87,6 @@ npm run setup
 ```
 
 `setup` 会创建 `data/`、`data/saves/`、`data/chroma/`，并在缺少 `.env` 时从 `.env.example` 生成一份。
-
-当前实现以 `custom` 兼容接口为主，默认模型是 Kimi K2.5。
-
-注意：
-
-- 如果 `.env` 中已经配置 `CUSTOM_API_KEY`，启动后即可直接调用 LLM。
-- 如果暂时还没配置好，服务也可以先启动，随后在浏览器里的 LLM 配置面板中补填并测试。
 
 ### 3. 启动项目
 
@@ -112,7 +105,31 @@ npm start
 http://localhost:3061
 ```
 
-### 4. 常用脚本
+### 4. 配置 LLM，然后重启
+
+第一次启动后，先在网页右侧的 **LLM 配置** 面板里填写并测试配置。当前实现以 `custom` 兼容接口为主，默认模型是 Kimi K2.5。
+
+常用配置项：
+
+```env
+LLM_PROVIDER=custom
+CUSTOM_API_KEY=your-api-key
+CUSTOM_MODEL=kimi-k2.5
+CUSTOM_ENDPOINT=https://coding.dashscope.aliyuncs.com/apps/anthropic/v1/messages
+CUSTOM_RESPONSE_PATH=content[1].text
+CUSTOM_API_KEY_HEADER=x-api-key
+```
+
+保存 LLM 配置后，先关闭服务再重新启动，让后端重新读取 `.env` 和持久化配置：
+
+```bash
+npm run stop
+npm start
+```
+
+也可以在启动窗口按 `Ctrl+C` 关闭，然后重新执行 `npm start`。
+
+### 5. 常用脚本
 
 ```bash
 # 初始化运行时目录和 .env
