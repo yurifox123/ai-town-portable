@@ -66,6 +66,19 @@ public/js/app/app.js
       -> public/js/core/game-config.js
 ```
 
+## 运行前必须安装
+
+这不是纯静态网页，电脑上至少需要先装这些东西：
+
+- **Node.js + npm**：推荐安装 Node.js 22 LTS；最低要求是 Node.js 20-26、npm 10+。安装 Node.js 时会一起安装 npm。
+- **浏览器**：Chrome、Edge 或其它现代浏览器都可以，用来打开 `http://localhost:3061`。
+- **网络连接**：第一次执行 `npm ci` 需要联网下载依赖；之后调用 LLM 也需要能访问你配置的模型接口。
+- **LLM API Key**：项目能先启动，但 Agent 真正调用模型时需要在网页里的 **LLM 配置** 面板填写自己的 API Key。
+
+不需要提前安装 Python、Conda、SQLite 客户端或手动准备 `node_modules/`。
+
+如果 Windows PowerShell 提示禁止运行 `npm.ps1`，可以改用 cmd，或者在 PowerShell 里执行 `npm.cmd ci`、`npm.cmd start`。
+
 ## 快速开始
 
 ### 1. 安装依赖
