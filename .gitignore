@@ -41,5 +41,5 @@ temp/
 
 # Ad-hoc test scripts and screenshots
 test-*.js
-*.png
+/*.png
 test-results/
